@@ -5,5 +5,5 @@ import { PurchaseDto } from '@app/modules/purchase/dtos/purchase.dto';
 export class GetAllPurchasesResDto {
   @ApiProperty()
   @IsNotEmptyObject({ nullable: false })
-  purchase: PurchaseDto[];
+  purchases: PurchaseDto[];
 }

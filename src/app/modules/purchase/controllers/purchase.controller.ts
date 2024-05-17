@@ -1,12 +1,12 @@
 import { PurchaseService } from '@app/modules/purchase/services/purchase.service';
 import { PurchaseControllerInterface } from '@app/modules/purchase/controllers/purchase.controller.interface';
 import { ErrorDto } from '@app/modules/session/dtos/error.dto';
-import { DeletePurchaseResDto } from '@app/modules/purchase/dtos/responses/delete-purchase-res.dto';
 import { GetAllPurchasesResDto } from '@app/modules/purchase/dtos/responses/get-all-purchases-res.dto';
 import { GetPurchaseResDto } from '@app/modules/purchase/dtos/responses/get-purchase-res.dto';
 import { GetPurchaseReqDto } from '@app/modules/purchase/dtos/requests/get-purchase-req.dto';
-import { DeletePurchaseReqDto } from '@app/modules/purchase/dtos/requests/delete-purchase-req.dto';
-import { PutPurchaseReqDto } from '@app/modules/purchase/dtos/requests/put-purchase-req.dto';
+import { GetPurchasesByCustomerReqDto } from '@app/modules/purchase/dtos/requests/get-purchases-by-customer-req.dto';
+import { GetPurchasesByCustomerResDto } from '@app/modules/purchase/dtos/responses/get-purchases-by-customer-res.dto';
+import { PostPurchaseReqDto } from '@app/modules/purchase/dtos/requests/post-purchase-req.dto';
 import {
   ApiOperation,
   ApiResponse,
@@ -24,6 +24,7 @@ import {
   HttpCode,
   HttpException,
   Logger,
+  Post,
 } from '@nestjs/common';
 
 @ApiTags('purchase')
@@ -58,6 +59,33 @@ export class PurchaseController implements PurchaseControllerInterface {
   }
 
   
+  @Get('info/customer/:id')
+  @HttpCode(200)
+  @ApiBearerAuth('auth')
+  @ApiOperation({ summary: 'Get the purchase data by customer' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a JSON with the purchase data by customer',
+    type: GetPurchasesByCustomerResDto,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+    type: ErrorDto,
+  })
+  async getPurchasesByCustomer(@Param() params: GetPurchasesByCustomerReqDto) {
+    const logger = new Logger(PurchaseController.name);
+
+    try {
+      const customerId = params.customerId;
+      logger.log('getPurchasesByCustomer()');
+      return await this.PurchaseService.getPurchasesByCustomer(customerId);
+    } catch (error) {
+      logger.error(error);
+      throw new HttpException(error.message, error.getStatus());
+    }
+  }
+
   @Get('info/:id')
   @HttpCode(200)
   @ApiBearerAuth('auth')
@@ -85,10 +113,10 @@ export class PurchaseController implements PurchaseControllerInterface {
     }
   }
 
-  @Put('insert')
+  @Post('insert')
   @HttpCode(200)
   @ApiBearerAuth('auth')
-  @ApiOperation({ summary: 'Put the purchase data' })
+  @ApiOperation({ summary: 'Post the purchase data' })
   @ApiResponse({
     status: 200,
     description: 'Returns a JSON with the purchase data',
@@ -99,42 +127,12 @@ export class PurchaseController implements PurchaseControllerInterface {
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async putPurchase(@Body() body: PutPurchaseReqDto, @Request() req: Request) {
+  async postPurchase(@Body() body: PostPurchaseReqDto) {
     const logger = new Logger(PurchaseController.name);
 
     try {
-      const isAdmin = req['isAdmin'];
-      const purchaseId = body.id;
-      logger.log('putPurchase()');
-      return await this.PurchaseService.putPurchase(isAdmin, purchaseId, body);
-    } catch (error) {
-      logger.error(error);
-      throw new HttpException(error.message, error.getStatus());
-    }
-  }
-
-  @Delete('remove/:id')
-  @HttpCode(200)
-  @ApiBearerAuth('auth')
-  @ApiOperation({ summary: 'Delete the purchase data' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns a JSON with the purchase status',
-    type: DeletePurchaseResDto,
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error',
-    type: ErrorDto,
-  })
-  async deletePurchase(@Param() params: DeletePurchaseReqDto, @Request() req: Request) {
-    const logger = new Logger(PurchaseController.name);
-
-    try {
-      const purchaseId = params.id;
-      const isAdmin = req['isAdmin'];
-      logger.log('deletePurchase()');
-      return await this.PurchaseService.deletePurchase(purchaseId, isAdmin);
+      logger.log('postPurchase()');
+      return await this.PurchaseService.postPurchase(body);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());

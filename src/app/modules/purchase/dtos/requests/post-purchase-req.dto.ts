@@ -1,12 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsNotEmpty, IsBoolean, IsDate} from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsBoolean, IsDate } from 'class-validator';
 
-export class PurchaseDto {
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-  
+export class PostPurchaseReqDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

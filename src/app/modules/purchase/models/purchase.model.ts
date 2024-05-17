@@ -9,29 +9,23 @@ export class Purchase extends Model {
   id: number;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  brand: string;
+  type: string;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  parcel: boolean;
 
   @Column({ type: DataType.FLOAT, allowNull: false })
   price: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  quantity: number;
+  qt_parcel: number;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  en_name: string;
+  @Column({ type: DataType.DATE, allowNull: false })
+  date: Date;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  pt_name: string;
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  fk_Cart_id: number;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  en_type: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  pt_type: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  en_desc: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  pt_desc: string;
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  fk_Customer_id: number;
 }

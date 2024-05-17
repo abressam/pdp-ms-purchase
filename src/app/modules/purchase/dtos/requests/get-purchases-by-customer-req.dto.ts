@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsNotEmpty } from 'class-validator';
 
-export class DeletePurchaseReqDto {
+export class GetPurchasesByCustomerReqDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  customerId: number;
 }
