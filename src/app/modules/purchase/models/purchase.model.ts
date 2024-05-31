@@ -14,7 +14,7 @@ export class Purchase extends Model {
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   parcel: boolean;
 
-  @Column({ type: DataType.FLOAT, allowNull: false })
+  @Column({ type: DataType.DECIMAL, allowNull: false })
   price: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
@@ -22,9 +22,6 @@ export class Purchase extends Model {
 
   @Column({ type: DataType.DATE, allowNull: false })
   date: Date;
-
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  fk_Cart_id: number;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
   fk_Customer_id: number;

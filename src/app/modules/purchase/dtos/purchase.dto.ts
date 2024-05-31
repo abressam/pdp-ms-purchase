@@ -3,11 +3,6 @@ import { IsString, IsNumber, IsNotEmpty, IsBoolean, IsDate} from 'class-validato
 
 export class PurchaseDto {
   @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-  
-  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   type: string;
@@ -31,14 +26,4 @@ export class PurchaseDto {
   @IsDate()
   @IsNotEmpty()
   date: Date;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  cartId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  customerId: number;
 }

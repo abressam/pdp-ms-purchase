@@ -21,19 +21,4 @@ export class PostPurchaseReqDto {
   @IsNumber()
   @IsNotEmpty()
   qt_parcel: number;
-
-  @ApiProperty()
-  @IsDate()
-  @IsNotEmpty()
-  date: Date;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  cartId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  customerId: number;
 }

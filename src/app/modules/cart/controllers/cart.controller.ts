@@ -3,8 +3,6 @@ import { CartControllerInterface } from '@app/modules/cart/controllers/cart.cont
 import { ErrorDto } from '@app/modules/session/dtos/error.dto';
 import { DeleteCartResDto } from '@app/modules/cart/dtos/responses/delete-cart-res.dto';
 import { GetAllCartsResDto } from '@app/modules/cart/dtos/responses/get-all-carts-res.dto';
-import { GetCartResDto } from '@app/modules/cart/dtos/responses/get-cart-res.dto';
-import { GetCartReqDto } from '@app/modules/cart/dtos/requests/get-cart-req.dto';
 import { DeleteCartReqDto } from '@app/modules/cart/dtos/requests/delete-cart-req.dto';
 import { PutCartReqDto } from '@app/modules/cart/dtos/requests/put-cart-req.dto';
 import {
@@ -31,7 +29,7 @@ import {
 export class CartController implements CartControllerInterface {
   constructor(private readonly cartService: CartService) {}
 
-  @Get('info')
+  @Get('info/closed')
   @HttpCode(200)
   @ApiBearerAuth('auth')
   @ApiOperation({ summary: 'Get all carts data' })
@@ -45,40 +43,40 @@ export class CartController implements CartControllerInterface {
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async getAllCarts() {
+  async getAllCarts(@Request() req: Request) {
     const logger = new Logger(CartController.name);
 
     try {
+      const isAdmin = req['isAdmin'];
       logger.log('getAllCarts()');
-      return await this.cartService.getAllCarts();
+      return await this.cartService.getAllCarts(isAdmin);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());
     }
   }
 
-  
-  @Get('info/:id')
+  @Get('info/open')
   @HttpCode(200)
   @ApiBearerAuth('auth')
   @ApiOperation({ summary: 'Get the cart data' })
   @ApiResponse({
     status: 200,
     description: 'Returns a JSON with the cart data',
-    type: GetCartResDto,
+    type: GetAllCartsResDto,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async getCart(@Param() params: GetCartReqDto) {
+  async getCart(@Request() req: Request) {
     const logger = new Logger(CartController.name);
 
     try {
-      const cartId = params.id;
+      const userId = req['userId'];
       logger.log('getCart()');
-      return await this.cartService.getCart(cartId);
+      return await this.cartService.getCart(userId);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());
@@ -92,7 +90,7 @@ export class CartController implements CartControllerInterface {
   @ApiResponse({
     status: 200,
     description: 'Returns a JSON with the cart data',
-    type: GetCartResDto,
+    type: GetAllCartsResDto,
   })
   @ApiResponse({
     status: 500,
@@ -103,10 +101,9 @@ export class CartController implements CartControllerInterface {
     const logger = new Logger(CartController.name);
 
     try {
-      const isAdmin = req['isAdmin'];
-      const cartId = body.id;
+      const userId = req['userId'];
       logger.log('putCart()');
-      return await this.cartService.putCart(isAdmin, cartId, body);
+      return await this.cartService.putCart(userId, body);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());
@@ -131,10 +128,10 @@ export class CartController implements CartControllerInterface {
     const logger = new Logger(CartController.name);
 
     try {
-      const cartId = params.id;
-      const isAdmin = req['isAdmin'];
+      const userId = req['userId'];
+      const productId = params.id;
       logger.log('deleteCart()');
-      return await this.cartService.deleteCart(cartId, isAdmin);
+      return await this.cartService.deleteCart(userId, productId);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());

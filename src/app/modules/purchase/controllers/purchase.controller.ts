@@ -2,10 +2,6 @@ import { PurchaseService } from '@app/modules/purchase/services/purchase.service
 import { PurchaseControllerInterface } from '@app/modules/purchase/controllers/purchase.controller.interface';
 import { ErrorDto } from '@app/modules/session/dtos/error.dto';
 import { GetAllPurchasesResDto } from '@app/modules/purchase/dtos/responses/get-all-purchases-res.dto';
-import { GetPurchaseResDto } from '@app/modules/purchase/dtos/responses/get-purchase-res.dto';
-import { GetPurchaseReqDto } from '@app/modules/purchase/dtos/requests/get-purchase-req.dto';
-import { GetPurchasesByCustomerReqDto } from '@app/modules/purchase/dtos/requests/get-purchases-by-customer-req.dto';
-import { GetPurchasesByCustomerResDto } from '@app/modules/purchase/dtos/responses/get-purchases-by-customer-res.dto';
 import { PostPurchaseReqDto } from '@app/modules/purchase/dtos/requests/post-purchase-req.dto';
 import {
   ApiOperation,
@@ -16,11 +12,8 @@ import {
 import {
   Controller,
   Get,
-  Put,
-  Delete,
   Request,
   Body,
-  Param,
   HttpCode,
   HttpException,
   Logger,
@@ -32,7 +25,7 @@ import {
 export class PurchaseController implements PurchaseControllerInterface {
   constructor(private readonly PurchaseService: PurchaseService) {}
 
-  @Get('info')
+  @Get('info/closed')
   @HttpCode(200)
   @ApiBearerAuth('auth')
   @ApiOperation({ summary: 'Get all purchases data' })
@@ -46,67 +39,40 @@ export class PurchaseController implements PurchaseControllerInterface {
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async getAllPurchases() {
+  async getAllPurchases(@Request() req: Request) {
     const logger = new Logger(PurchaseController.name);
 
     try {
+      const isAdmin = req['isAdmin'];
       logger.log('getAllPurchases()');
-      return await this.PurchaseService.getAllPurchases();
+      return await this.PurchaseService.getAllPurchases(isAdmin);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());
     }
   }
 
-  
-  @Get('info/customer/:id')
+  @Get('info/open')
   @HttpCode(200)
   @ApiBearerAuth('auth')
   @ApiOperation({ summary: 'Get the purchase data by customer' })
   @ApiResponse({
     status: 200,
     description: 'Returns a JSON with the purchase data by customer',
-    type: GetPurchasesByCustomerResDto,
+    type: GetAllPurchasesResDto,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async getPurchasesByCustomer(@Param() params: GetPurchasesByCustomerReqDto) {
+  async getPurchasesByCustomer(@Request() req: Request) {
     const logger = new Logger(PurchaseController.name);
 
     try {
-      const customerId = params.customerId;
+      const userId = req['userId'];
       logger.log('getPurchasesByCustomer()');
-      return await this.PurchaseService.getPurchasesByCustomer(customerId);
-    } catch (error) {
-      logger.error(error);
-      throw new HttpException(error.message, error.getStatus());
-    }
-  }
-
-  @Get('info/:id')
-  @HttpCode(200)
-  @ApiBearerAuth('auth')
-  @ApiOperation({ summary: 'Get the purchase data' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns a JSON with the purchase data',
-    type: GetPurchaseResDto,
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal server error',
-    type: ErrorDto,
-  })
-  async getPurchase(@Param() params: GetPurchaseReqDto) {
-    const logger = new Logger(PurchaseController.name);
-
-    try {
-      const purchaseId = params.id;
-      logger.log('getPurchase()');
-      return await this.PurchaseService.getPurchase(purchaseId);
+      return await this.PurchaseService.getPurchase(userId);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());
@@ -120,19 +86,20 @@ export class PurchaseController implements PurchaseControllerInterface {
   @ApiResponse({
     status: 200,
     description: 'Returns a JSON with the purchase data',
-    type: GetPurchaseResDto,
+    type: GetAllPurchasesResDto,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async postPurchase(@Body() body: PostPurchaseReqDto) {
+  async postPurchase(@Body() body: PostPurchaseReqDto, @Request() req: Request) {
     const logger = new Logger(PurchaseController.name);
 
     try {
+      const userId = req['userId'];
       logger.log('postPurchase()');
-      return await this.PurchaseService.postPurchase(body);
+      return await this.PurchaseService.postPurchase(userId, body);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());
