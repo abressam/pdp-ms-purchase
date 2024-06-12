@@ -7,10 +7,13 @@ import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import appConfig from '@app/configs/app.config';
 import dbConfig from '@app/configs/db.config';
+import { CartController } from '@app/modules/cart/controllers/cart.controller';
+import { CartModule } from '@app/modules/cart/cart.module';
 
 @Module({
   imports: [
     HealthcheckModule,
+    CartModule,
     PurchaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -21,6 +24,7 @@ import dbConfig from '@app/configs/db.config';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SessionMiddleware).forRoutes(CartController);
     consumer.apply(SessionMiddleware).forRoutes(PurchaseController);
   }
 }
