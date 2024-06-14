@@ -15,9 +15,7 @@ export class PurchaseService implements PurchaseServiceInterface {
     private purchaseModel: typeof Purchase,
   ) {}
 
-  async getAllPurchases(isAdmin: boolean): Promise<GetAllPurchasesResDto> {
-    this.validateAuth(isAdmin);
-
+  async getAllPurchases(): Promise<GetAllPurchasesResDto> {
     const purchases = await this.purchaseModel.findAll();
     this.validatePurchase(purchases[0]);
 

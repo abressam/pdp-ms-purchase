@@ -39,13 +39,12 @@ export class PurchaseController implements PurchaseControllerInterface {
     description: 'Internal server error',
     type: ErrorDto,
   })
-  async getAllPurchases(@Request() req: Request) {
+  async getAllPurchases() {
     const logger = new Logger(PurchaseController.name);
 
     try {
-      const isAdmin = req['isAdmin'];
       logger.log('getAllPurchases()');
-      return await this.PurchaseService.getAllPurchases(isAdmin);
+      return await this.PurchaseService.getAllPurchases();
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());

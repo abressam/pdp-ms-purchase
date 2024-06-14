@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { HealthcheckModule } from '@app/modules/healthcheck/healthcheck.module';
 import { SessionMiddleware } from '@app/modules/session/middlewares/session.middleware';
 import { PurchaseModule } from '@app/modules/purchase/purchase.module';

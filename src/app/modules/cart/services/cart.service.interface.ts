@@ -3,7 +3,7 @@ import { GetAllCartsResDto } from '@app/modules/cart/dtos/responses/get-all-cart
 import { PutCartReqDto } from '@app/modules/cart/dtos/requests/put-cart-req.dto';
 
 export interface CartServiceInterface {
-  getAllCarts(isAdmin: boolean): Promise<GetAllCartsResDto>;
+  getAllCarts(userId: number): Promise<GetAllCartsResDto>;
   getCart(userId: number): Promise<GetAllCartsResDto>;
   putCart(
     userId: number,

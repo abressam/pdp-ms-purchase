@@ -47,9 +47,9 @@ export class CartController implements CartControllerInterface {
     const logger = new Logger(CartController.name);
 
     try {
-      const isAdmin = req['isAdmin'];
+      const userId = req['userId'];
       logger.log('getAllCarts()');
-      return await this.cartService.getAllCarts(isAdmin);
+      return await this.cartService.getAllCarts(userId);
     } catch (error) {
       logger.error(error);
       throw new HttpException(error.message, error.getStatus());

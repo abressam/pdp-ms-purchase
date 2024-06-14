@@ -14,11 +14,10 @@ export class CartService implements CartServiceInterface {
     private cartModel: typeof Cart,
   ) {}
 
-  async getAllCarts(isAdmin: boolean): Promise<GetAllCartsResDto> {
-    this.validateAuth(isAdmin);
-
+  async getAllCarts(userId: number): Promise<GetAllCartsResDto> {
     const carts = await this.cartModel.findAll({
       where: {
+        fk_Customer_id: userId,
         fk_Purchase_id: {
           [Op.ne]: null
         }

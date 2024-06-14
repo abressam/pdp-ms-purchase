@@ -2,7 +2,7 @@ import { GetAllPurchasesResDto } from '@app/modules/purchase/dtos/responses/get-
 import { PostPurchaseReqDto } from '@app/modules/purchase/dtos/requests/post-purchase-req.dto';
 
 export interface PurchaseControllerInterface {
-  getAllPurchases(req: Request): Promise<GetAllPurchasesResDto>;
+  getAllPurchases(): Promise<GetAllPurchasesResDto>;
   getPurchasesByCustomer(req: Request): Promise<GetAllPurchasesResDto>;
   postPurchase(body: PostPurchaseReqDto, req: Request): Promise<GetAllPurchasesResDto>;
 }
